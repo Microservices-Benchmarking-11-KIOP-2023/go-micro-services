@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	maxSearchRadius  = 10
-	maxSearchResults = 5
+	maxSearchRadius = 10
+	// TODO: Fix this ugly workaround
+	maxSearchResults = 10000
 )
 
 // point represents a hotels's geo location on map
