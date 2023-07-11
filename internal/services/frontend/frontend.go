@@ -3,11 +3,13 @@ package frontend
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/harlow/go-micro-services/internal/trace"
 	"net/http"
+	"strconv"
+	"strings"
 
 	profile "github.com/harlow/go-micro-services/internal/services/profile/proto"
 	search "github.com/harlow/go-micro-services/internal/services/search/proto"
-	"github.com/harlow/go-micro-services/internal/trace"
 	opentracing "github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 )
@@ -31,12 +33,12 @@ type Frontend struct {
 // Run the server
 func (s *Frontend) Run(port int) error {
 	mux := trace.NewServeMux(s.tracer)
-	mux.Handle("/", http.FileServer(http.Dir("public")))
 	mux.Handle("/hotels", http.HandlerFunc(s.searchHandler))
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }
 
+// Run the server
 func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := r.Context()
@@ -48,14 +50,33 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// get lat/lon from query params
+	latParam, lonParam := r.URL.Query().Get("lat"), r.URL.Query().Get("lon")
+	if latParam == "" || lonParam == "" {
+		http.Error(w, "Please specify lat/lon params", http.StatusBadRequest)
+		return
+	}
+
+	lat, err := strconv.ParseFloat(strings.TrimSpace(latParam), 64)
+	if err != nil {
+		http.Error(w, "Invalid latitude", http.StatusBadRequest)
+		return
+	}
+
+	lon, err := strconv.ParseFloat(strings.TrimSpace(lonParam), 64)
+	if err != nil {
+		http.Error(w, "Invalid longitude", http.StatusBadRequest)
+		return
+	}
+
 	// search for best hotels
-	// TODO(hw): allow lat/lon from input params
 	searchResp, err := s.searchClient.Nearby(ctx, &search.NearbyRequest{
-		Lat:     37.7749,
-		Lon:     -122.4194,
+		Lat:     float32(lat),
+		Lon:     float32(lon),
 		InDate:  inDate,
 		OutDate: outDate,
 	})
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -83,7 +104,7 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 // return a geoJSON response that allows google map to plot points directly on map
 // https://developers.google.com/maps/documentation/javascript/datalayer#sample_geojson
 func geoJSONResponse(hs []*profile.Hotel) map[string]interface{} {
-	fs := []interface{}{}
+	var fs []interface{}
 
 	for _, h := range hs {
 		fs = append(fs, map[string]interface{}{
