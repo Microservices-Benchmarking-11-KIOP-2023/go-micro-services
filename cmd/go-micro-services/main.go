@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 
-	frontendsrv "github.com/harlow/go-micro-services/internal/services/frontend"
-	geosrv "github.com/harlow/go-micro-services/internal/services/geo"
-	profilesrv "github.com/harlow/go-micro-services/internal/services/profile"
-	ratesrv "github.com/harlow/go-micro-services/internal/services/rate"
-	searchsrv "github.com/harlow/go-micro-services/internal/services/search"
+	FrontendServer "github.com/harlow/go-micro-services/internal/services/frontend"
+	GeoServer "github.com/harlow/go-micro-services/internal/services/geo"
+	ProfileServer "github.com/harlow/go-micro-services/internal/services/profile"
+	RateServer "github.com/harlow/go-micro-services/internal/services/rate"
+	SearchServer "github.com/harlow/go-micro-services/internal/services/search"
 	"google.golang.org/grpc"
 )
 
@@ -33,18 +33,18 @@ func main() {
 
 	switch cmd {
 	case "geo":
-		srv = geosrv.New()
+		srv = GeoServer.New()
 	case "rate":
-		srv = ratesrv.New()
+		srv = RateServer.New()
 	case "profile":
-		srv = profilesrv.New()
+		srv = ProfileServer.New()
 	case "search":
-		srv = searchsrv.New(
+		srv = SearchServer.New(
 			dial(*geoaddr),
 			dial(*rateaddr),
 		)
 	case "frontend":
-		srv = frontendsrv.New(
+		srv = FrontendServer.New(
 			dial(*searchaddr),
 			dial(*profileaddr),
 		)

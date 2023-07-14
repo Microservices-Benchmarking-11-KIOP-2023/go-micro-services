@@ -7,3 +7,7 @@ cmd/rate/rate
 cmd/www/www
 cmd/search/search
 vendor/**
+/.idea/.gitignore
+/.idea/go-micro-services.iml
+/.idea/modules.xml
+/.idea/vcs.xml
