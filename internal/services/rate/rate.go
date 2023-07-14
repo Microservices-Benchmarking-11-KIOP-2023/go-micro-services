@@ -6,18 +6,15 @@ import (
 	"log"
 	"net"
 
-	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/harlow/go-micro-services/data"
 	rate "github.com/harlow/go-micro-services/internal/services/rate/proto"
-	opentracing "github.com/opentracing/opentracing-go"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
 // New returns a new server
-func New(tr opentracing.Tracer) *Rate {
+func New() *Rate {
 	return &Rate{
-		tracer:    tr,
 		rateTable: loadRateTable("data/inventory.json"),
 	}
 }
@@ -25,16 +22,11 @@ func New(tr opentracing.Tracer) *Rate {
 // Rate implements the rate service
 type Rate struct {
 	rateTable map[stay]*rate.RatePlan
-	tracer    opentracing.Tracer
 }
 
 // Run starts the server
 func (s *Rate) Run(port int) error {
-	srv := grpc.NewServer(
-		grpc.UnaryInterceptor(
-			otgrpc.OpenTracingServerInterceptor(s.tracer),
-		),
-	)
+	srv := grpc.NewServer()
 	rate.RegisterRateServer(srv, s)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))

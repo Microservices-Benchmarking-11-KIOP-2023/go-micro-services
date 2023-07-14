@@ -3,23 +3,20 @@ package frontend
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/harlow/go-micro-services/internal/trace"
 	"net/http"
 	"strconv"
 	"strings"
 
 	profile "github.com/harlow/go-micro-services/internal/services/profile/proto"
 	search "github.com/harlow/go-micro-services/internal/services/search/proto"
-	opentracing "github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 )
 
 // New returns a new server
-func New(t opentracing.Tracer, searchconn, profileconn *grpc.ClientConn) *Frontend {
+func New(searchconn, profileconn *grpc.ClientConn) *Frontend {
 	return &Frontend{
 		searchClient:  search.NewSearchClient(searchconn),
 		profileClient: profile.NewProfileClient(profileconn),
-		tracer:        t,
 	}
 }
 
@@ -27,12 +24,11 @@ func New(t opentracing.Tracer, searchconn, profileconn *grpc.ClientConn) *Fronte
 type Frontend struct {
 	searchClient  search.SearchClient
 	profileClient profile.ProfileClient
-	tracer        opentracing.Tracer
 }
 
 // Run the server
 func (s *Frontend) Run(port int) error {
-	mux := trace.NewServeMux(s.tracer)
+	mux := http.NewServeMux()
 	mux.Handle("/hotels", http.HandlerFunc(s.searchHandler))
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
