@@ -57,13 +57,13 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	lat, err := strconv.ParseFloat(strings.TrimSpace(latParam), 64)
+	lat, err := strconv.ParseFloat(strings.TrimSpace(latParam), 32)
 	if err != nil {
 		http.Error(w, "Invalid latitude", http.StatusBadRequest)
 		return
 	}
 
-	lon, err := strconv.ParseFloat(strings.TrimSpace(lonParam), 64)
+	lon, err := strconv.ParseFloat(strings.TrimSpace(lonParam), 32)
 	if err != nil {
 		http.Error(w, "Invalid longitude", http.StatusBadRequest)
 		return
@@ -102,7 +102,6 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // return a geoJSON response that allows google map to plot points directly on map
-// https://developers.google.com/maps/documentation/javascript/datalayer#sample_geojson
 func geoJSONResponse(hs []*profile.Hotel) map[string]interface{} {
 	var fs []interface{}
 
