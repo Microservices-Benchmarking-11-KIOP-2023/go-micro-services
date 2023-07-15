@@ -3,11 +3,11 @@ package profile
 import (
 	"encoding/json"
 	"fmt"
+	profile "github.com/harlow/go-micro-services/services/profile/proto"
 	"log"
 	"net"
 
 	"github.com/harlow/go-micro-services/data"
-	profile "github.com/harlow/go-micro-services/internal/services/profile/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

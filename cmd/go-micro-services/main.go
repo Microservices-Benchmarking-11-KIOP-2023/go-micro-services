@@ -3,14 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	FrontendServer "github.com/harlow/go-micro-services/services/frontend"
+	GeoServer "github.com/harlow/go-micro-services/services/geo"
+	ProfileServer "github.com/harlow/go-micro-services/services/profile"
+	RateServer "github.com/harlow/go-micro-services/services/rate"
+	SearchServer "github.com/harlow/go-micro-services/services/search"
 	"log"
 	"os"
 
-	FrontendServer "github.com/harlow/go-micro-services/internal/services/frontend"
-	GeoServer "github.com/harlow/go-micro-services/internal/services/geo"
-	ProfileServer "github.com/harlow/go-micro-services/internal/services/profile"
-	RateServer "github.com/harlow/go-micro-services/internal/services/rate"
-	SearchServer "github.com/harlow/go-micro-services/internal/services/search"
 	"google.golang.org/grpc"
 )
 

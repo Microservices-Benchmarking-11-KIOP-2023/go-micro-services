@@ -3,12 +3,12 @@ package frontend
 import (
 	"encoding/json"
 	"fmt"
+	profile "github.com/harlow/go-micro-services/services/profile/proto"
+	search "github.com/harlow/go-micro-services/services/search/proto"
 	"net/http"
 	"strconv"
 	"strings"
 
-	profile "github.com/harlow/go-micro-services/internal/services/profile/proto"
-	search "github.com/harlow/go-micro-services/internal/services/search/proto"
 	"google.golang.org/grpc"
 )
 

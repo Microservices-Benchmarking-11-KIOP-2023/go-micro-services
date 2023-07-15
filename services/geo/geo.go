@@ -3,12 +3,12 @@ package geo
 import (
 	"encoding/json"
 	"fmt"
+	geo "github.com/harlow/go-micro-services/services/geo/proto"
 	"log"
 	"net"
 
 	"github.com/hailocab/go-geoindex"
 	"github.com/harlow/go-micro-services/data"
-	geo "github.com/harlow/go-micro-services/internal/services/geo/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

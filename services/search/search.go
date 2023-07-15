@@ -2,12 +2,12 @@ package search
 
 import (
 	"fmt"
+	geo "github.com/harlow/go-micro-services/services/geo/proto"
+	rate "github.com/harlow/go-micro-services/services/rate/proto"
+	search "github.com/harlow/go-micro-services/services/search/proto"
 	"log"
 	"net"
 
-	geo "github.com/harlow/go-micro-services/internal/services/geo/proto"
-	rate "github.com/harlow/go-micro-services/internal/services/rate/proto"
-	search "github.com/harlow/go-micro-services/internal/services/search/proto"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

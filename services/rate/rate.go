@@ -3,11 +3,11 @@ package rate
 import (
 	"encoding/json"
 	"fmt"
+	rate "github.com/harlow/go-micro-services/services/rate/proto"
 	"log"
 	"net"
 
 	"github.com/harlow/go-micro-services/data"
-	rate "github.com/harlow/go-micro-services/internal/services/rate/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
