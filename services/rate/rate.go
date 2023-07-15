@@ -59,7 +59,7 @@ func (s *Rate) GetRates(ctx context.Context, req *rate.Request) (*rate.Result, e
 func loadRateTable(path string) map[stay]*rate.RatePlan {
 	file := data.MustAsset(path)
 
-	rates := []*rate.RatePlan{}
+	var rates []*rate.RatePlan
 	if err := json.Unmarshal(file, &rates); err != nil {
 		log.Fatalf("Failed to load json: %v", err)
 	}

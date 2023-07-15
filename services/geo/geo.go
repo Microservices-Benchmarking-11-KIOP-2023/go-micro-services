@@ -19,7 +19,7 @@ const (
 	maxSearchResults = 10000
 )
 
-// point represents a hotels's geo location on map
+// point represents a hotel's geographic location on map
 type point struct {
 	Pid  string  `json:"hotelId"`
 	Plat float64 `json:"lat"`
@@ -34,13 +34,13 @@ func (p *point) Id() string   { return p.Pid }
 // New returns a new server
 func New() *Geo {
 	return &Geo{
-		geoidx: newGeoIndex("data/geo.json"),
+		geoIndex: newGeoIndex("data/geo.json"),
 	}
 }
 
 // Server implements the geo service
 type Geo struct {
-	geoidx *geoindex.ClusteringIndex
+	geoIndex *geoindex.ClusteringIndex
 }
 
 // Run starts the server
@@ -59,7 +59,7 @@ func (s *Geo) Run(port int) error {
 // Nearby returns all hotels within a given distance.
 func (s *Geo) Nearby(ctx context.Context, req *geo.Request) (*geo.Result, error) {
 	var (
-		points = s.getNearbyPoints(ctx, float64(req.Lat), float64(req.Lon))
+		points = s.getNearbyPoints(float64(req.Lat), float64(req.Lon))
 		res    = &geo.Result{}
 	)
 
@@ -70,14 +70,14 @@ func (s *Geo) Nearby(ctx context.Context, req *geo.Request) (*geo.Result, error)
 	return res, nil
 }
 
-func (s *Geo) getNearbyPoints(ctx context.Context, lat, lon float64) []geoindex.Point {
+func (s *Geo) getNearbyPoints(lat, lon float64) []geoindex.Point {
 	center := &geoindex.GeoPoint{
 		Pid:  "",
 		Plat: lat,
 		Plon: lon,
 	}
 
-	return s.geoidx.KNearest(
+	return s.geoIndex.KNearest(
 		center,
 		maxSearchResults,
 		geoindex.Km(maxSearchRadius), func(p geoindex.Point) bool {

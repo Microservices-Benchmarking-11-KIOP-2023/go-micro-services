@@ -94,7 +94,11 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(geoJSONResponse(profileResp.Hotels))
+	err = json.NewEncoder(w).Encode(geoJSONResponse(profileResp.Hotels))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // return a geoJSON response that allows google map to plot points directly on map
