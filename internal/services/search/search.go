@@ -12,7 +12,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// New returns a new server
 func New(geoconn, rateconn *grpc.ClientConn) *Search {
 	return &Search{
 		geoClient:  geo.NewGeoClient(geoconn),
@@ -20,13 +19,11 @@ func New(geoconn, rateconn *grpc.ClientConn) *Search {
 	}
 }
 
-// Search implements the search service
 type Search struct {
 	geoClient  geo.GeoClient
 	rateClient rate.RateClient
 }
 
-// Run starts the server
 func (s *Search) Run(port int) error {
 	srv := grpc.NewServer()
 	search.RegisterSearchServer(srv, s)
