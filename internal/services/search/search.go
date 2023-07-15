@@ -12,10 +12,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-func New(geoconn, rateconn *grpc.ClientConn) *Search {
+func New(geoConnection, rateConnection *grpc.ClientConn) *Search {
 	return &Search{
-		geoClient:  geo.NewGeoClient(geoconn),
-		rateClient: rate.NewRateClient(rateconn),
+		geoClient:  geo.NewGeoClient(geoConnection),
+		rateClient: rate.NewRateClient(rateConnection),
 	}
 }
 

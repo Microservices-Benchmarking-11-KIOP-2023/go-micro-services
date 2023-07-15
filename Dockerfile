@@ -1,4 +1,4 @@
-FROM golang:1.19.4
+FROM golang:1.20.6
 
 WORKDIR /go/src/github.com/harlow/go-micro-services
 
