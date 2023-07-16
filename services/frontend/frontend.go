@@ -12,21 +12,18 @@ import (
 	"google.golang.org/grpc"
 )
 
-// New returns a new server
-func New(searchconn, profileconn *grpc.ClientConn) *Frontend {
+func New(searchConnection, profileConnection *grpc.ClientConn) *Frontend {
 	return &Frontend{
-		searchClient:  search.NewSearchClient(searchconn),
-		profileClient: profile.NewProfileClient(profileconn),
+		searchClient:  search.NewSearchClient(searchConnection),
+		profileClient: profile.NewProfileClient(profileConnection),
 	}
 }
 
-// Frontend implements frontend service
 type Frontend struct {
 	searchClient  search.SearchClient
 	profileClient profile.ProfileClient
 }
 
-// Run the server
 func (s *Frontend) Run(port int) error {
 	mux := http.NewServeMux()
 	mux.Handle("/hotels", http.HandlerFunc(s.searchHandler))
@@ -34,7 +31,6 @@ func (s *Frontend) Run(port int) error {
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }
 
-// Run the server
 func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := r.Context()
@@ -101,7 +97,6 @@ func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// return a geoJSON response that allows google map to plot points directly on map
 func geoJSONResponse(hs []*profile.Hotel) map[string]interface{} {
 	var fs []interface{}
 
