@@ -1,9 +1,9 @@
-# Ignore everything
-**
-
-# Allow Go source files
-!**/*.go
-
-# Allow Go mod and sum files
-!go.mod
-!go.sum
+.dockerignore
+.gitignore
+docker-compose.yml
+Dockerfile
+LICENSE
+Makefile
+data/geo.json
+data/hotels.json
+data/inventory.json
