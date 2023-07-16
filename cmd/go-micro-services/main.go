@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	FrontendServer "github.com/harlow/go-micro-services/services/frontend"
+	GatewayServer "github.com/harlow/go-micro-services/services/gateway"
 	GeoServer "github.com/harlow/go-micro-services/services/geo"
 	ProfileServer "github.com/harlow/go-micro-services/services/profile"
 	RateServer "github.com/harlow/go-micro-services/services/rate"
@@ -44,8 +44,8 @@ func main() {
 			dial(*geoaddr),
 			dial(*rateaddr),
 		)
-	case "frontend":
-		srv = FrontendServer.New(
+	case "gateway":
+		srv = GatewayServer.New(
 			dial(*searchaddr),
 			dial(*profileaddr),
 		)

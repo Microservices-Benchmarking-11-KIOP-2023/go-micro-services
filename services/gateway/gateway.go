@@ -1,4 +1,4 @@
-package frontend
+package gateway
 
 import (
 	"encoding/json"
@@ -12,26 +12,26 @@ import (
 	"google.golang.org/grpc"
 )
 
-func New(searchConnection, profileConnection *grpc.ClientConn) *Frontend {
-	return &Frontend{
+func New(searchConnection, profileConnection *grpc.ClientConn) *Gateway {
+	return &Gateway{
 		searchClient:  search.NewSearchClient(searchConnection),
 		profileClient: profile.NewProfileClient(profileConnection),
 	}
 }
 
-type Frontend struct {
+type Gateway struct {
 	searchClient  search.SearchClient
 	profileClient profile.ProfileClient
 }
 
-func (s *Frontend) Run(port int) error {
+func (s *Gateway) Run(port int) error {
 	mux := http.NewServeMux()
 	mux.Handle("/hotels", http.HandlerFunc(s.searchHandler))
 
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }
 
-func (s *Frontend) searchHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Gateway) searchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx := r.Context()
 

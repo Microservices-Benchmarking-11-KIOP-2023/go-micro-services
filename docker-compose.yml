@@ -1,7 +1,7 @@
 services:
-  frontend:
+  gateway:
     build: .
-    entrypoint: /app/go-micro-services frontend
+    entrypoint: /app/go-micro-services gateway
     ports:
       - "5000:8080"
     depends_on:
