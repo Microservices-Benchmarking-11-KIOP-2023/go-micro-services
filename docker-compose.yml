@@ -1,7 +1,7 @@
 services:
   frontend:
     build: .
-    entrypoint: go-micro-services frontend
+    entrypoint: /app/go-micro-services frontend
     ports:
       - "5000:8080"
     depends_on:
@@ -9,19 +9,19 @@ services:
       - profile
   search:
     build: .
-    entrypoint: go-micro-services search
+    entrypoint: /app/go-micro-services search
     links:
       - geo
       - rate
   profile:
     build: .
-    entrypoint: go-micro-services profile
+    entrypoint: /app/go-micro-services profile
     links:
       - geo
       - rate
   geo:
     build: .
-    entrypoint: go-micro-services geo
+    entrypoint: /app/go-micro-services geo
   rate:
     build: .
-    entrypoint: go-micro-services rate
+    entrypoint: /app/go-micro-services rate

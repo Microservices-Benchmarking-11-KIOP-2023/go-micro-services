@@ -1,0 +1,9 @@
+# Ignore everything
+**
+
+# Allow Go source files
+!**/*.go
+
+# Allow Go mod and sum files
+!go.mod
+!go.sum
