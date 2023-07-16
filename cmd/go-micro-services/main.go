@@ -8,6 +8,7 @@ import (
 	ProfileServer "github.com/harlow/go-micro-services/services/profile"
 	RateServer "github.com/harlow/go-micro-services/services/rate"
 	SearchServer "github.com/harlow/go-micro-services/services/search"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"os"
 
@@ -59,7 +60,7 @@ func main() {
 
 func dial(addr string) *grpc.ClientConn {
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
 	conn, err := grpc.Dial(addr, opts...)
