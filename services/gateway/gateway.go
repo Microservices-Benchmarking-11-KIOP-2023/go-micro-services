@@ -74,17 +74,11 @@ func (s *Gateway) searchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// grab locale from query params or default to en
-	locale := r.URL.Query().Get("locale")
-	if locale == "" {
-		locale = "en"
-	}
-
 	// hotel profiles
 	profileResp, err := s.profileClient.GetProfiles(ctx, &profile.Request{
 		HotelIds: searchResp.HotelIds,
-		Locale:   locale,
 	})
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

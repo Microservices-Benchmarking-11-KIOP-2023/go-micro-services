@@ -9,7 +9,6 @@ service Profile {
 
 message Request {
   repeated string hotelIds = 1;
-  string locale = 2;
 }
 
 message Result {

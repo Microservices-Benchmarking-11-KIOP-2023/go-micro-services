@@ -8,7 +8,6 @@ service Geo {
   rpc Nearby(Request) returns (Result);
 }
 
-// The latitude and longitude of the current location.
 message Request {
   float lat = 1;
   float lon = 2;
