@@ -10,15 +10,12 @@ services:
   search:
     build: .
     entrypoint: /app/go-micro-services search
-    links:
+    depends_on:
       - geo
       - rate
   profile:
     build: .
     entrypoint: /app/go-micro-services profile
-    links:
-      - geo
-      - rate
   geo:
     build: .
     entrypoint: /app/go-micro-services geo

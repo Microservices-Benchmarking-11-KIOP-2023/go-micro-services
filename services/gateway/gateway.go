@@ -91,10 +91,10 @@ func (s *Gateway) searchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func geoJSONResponse(hs []*profile.Hotel) map[string]interface{} {
+func geoJSONResponse(hotels []*profile.Hotel) map[string]interface{} {
 	var fs []interface{}
 
-	for _, h := range hs {
+	for _, h := range hotels {
 		fs = append(fs, map[string]interface{}{
 			"type": "Feature",
 			"id":   h.Id,
