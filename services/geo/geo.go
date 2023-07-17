@@ -14,9 +14,8 @@ import (
 )
 
 const (
-	maxSearchRadius = 10
-	// TODO: Fix this ugly workaround
-	maxSearchResults = 10000
+	maxSearchRadius  = 10
+	maxSearchResults = 1000000000
 )
 
 // point represents a hotel's geographic location on map
@@ -80,7 +79,8 @@ func (s *Geo) getNearbyPoints(lat, lon float64) []geoindex.Point {
 	return s.geoIndex.KNearest(
 		center,
 		maxSearchResults,
-		geoindex.Km(maxSearchRadius), func(p geoindex.Point) bool {
+		geoindex.Km(maxSearchRadius),
+		func(p geoindex.Point) bool {
 			return true
 		},
 	)
