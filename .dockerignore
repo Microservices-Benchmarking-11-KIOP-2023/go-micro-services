@@ -1,9 +1,0 @@
-.dockerignore
-.gitignore
-docker-compose.yml
-Dockerfile
-LICENSE
-Makefile
-data/geo.json
-data/hotels.json
-data/inventory.json

@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "./internal/services/geo/proto";
+option go_package = "github.com/harlow/go-micro-services/services/geo/proto";
 
 package geo;
 

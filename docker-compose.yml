@@ -1,24 +1,19 @@
 services:
   gateway:
-    build: .
-    entrypoint: /app/go-micro-services gateway
+    build: services/gateway
     ports:
       - "5000:8080"
     depends_on:
       - search
       - profile
   search:
-    build: .
-    entrypoint: /app/go-micro-services search
+    build: services/search
     depends_on:
       - geo
       - rate
   profile:
-    build: .
-    entrypoint: /app/go-micro-services profile
+    build: services/profile
   geo:
-    build: .
-    entrypoint: /app/go-micro-services geo
+    build: services/geo
   rate:
-    build: .
-    entrypoint: /app/go-micro-services rate
+    build: services/rate
