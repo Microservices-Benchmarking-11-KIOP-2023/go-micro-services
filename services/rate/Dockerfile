@@ -13,4 +13,4 @@ FROM gcr.io/distroless/static-debian11:nonroot
 
 COPY --from=build /go/bin/ /app/
 
-CMD ["/app/rate"]
+ENTRYPOINT ["/app/rate"]

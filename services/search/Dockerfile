@@ -13,4 +13,4 @@ FROM gcr.io/distroless/static-debian11:nonroot
 
 COPY --from=build /go/bin/ /app/
 
-CMD ["/app/search"]
+ENTRYPOINT ["/app/search"]
