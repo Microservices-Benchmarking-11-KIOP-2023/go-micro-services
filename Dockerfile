@@ -9,7 +9,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go install -ldflags="-s -w" ./cmd/...
 
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM gcr.io/distroless/static-debian11:debug
 
 COPY --from=build /go/bin/ /app/
 
