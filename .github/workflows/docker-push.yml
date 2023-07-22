@@ -26,7 +26,7 @@ jobs:
 
       - name: Build & Push
         run: |
-          sudo docker login ${{ env.REGISTRY }} -u ${{ secrets.GH_PACKAGE_ACCOUNT }} --passsword-stdin
+          sudo docker login ${{ env.REGISTRY }} -u ${{ secrets.GH_PACKAGE_ACCOUNT }} --password-stdin --password-stdin
           ${{ secrets.GH_PACKAGE_TOKEN }}
           sudo docker-compose build
           sudo docker-compose push
