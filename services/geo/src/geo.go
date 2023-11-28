@@ -5,17 +5,17 @@ import (
 	"fmt"
 	geo "github.com/harlow/go-micro-services/geo/proto"
 	"log"
+	"math"
 	"net"
 
-	"github.com/hailocab/go-geoindex"
 	"github.com/harlow/go-micro-services/geo/data"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
 const (
-	maxSearchRadius  = 10
-	maxSearchResults = 1000000000
+	maxSearchRadius = 10
+	earthRadiusKm   = 6371
 )
 
 // point represents a hotel's geographic location on map
@@ -33,13 +33,13 @@ func (p *point) Id() string   { return p.Pid }
 // New returns a new server
 func New() *Geo {
 	return &Geo{
-		geoIndex: newGeoIndex("data/geo.json"),
+		points: loadPoints("data/geo.json"),
 	}
 }
 
 // Server implements the geo service
 type Geo struct {
-	geoIndex *geoindex.ClusteringIndex
+	points []*point
 }
 
 // Run starts the server
@@ -55,54 +55,43 @@ func (s *Geo) Run(port int) error {
 	return srv.Serve(lis)
 }
 
+// Haversine formula to calculate the distance between two points on the earth
+func haversineDistance(lat1, lon1, lat2, lon2 float64) float64 {
+	// Convert latitude and longitude from degrees to radians
+	lat1Rad, lon1Rad := lat1*math.Pi/180, lon1*math.Pi/180
+	lat2Rad, lon2Rad := lat2*math.Pi/180, lon2*math.Pi/180
+
+	// Haversine formula
+	dLat := lat2Rad - lat1Rad
+	dLon := lon2Rad - lon1Rad
+	a := math.Sin(dLat/2)*math.Sin(dLat/2) + math.Cos(lat1Rad)*math.Cos(lat2Rad)*math.Sin(dLon/2)*math.Sin(dLon/2)
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+	return earthRadiusKm * c
+}
+
 // Nearby returns all hotels within a given distance.
 func (s *Geo) Nearby(ctx context.Context, req *geo.Request) (*geo.Result, error) {
-	var (
-		points = s.getNearbyPoints(float64(req.Lat), float64(req.Lon))
-		res    = &geo.Result{}
-	)
-
-	for _, p := range points {
-		res.HotelIds = append(res.HotelIds, p.Id())
+	var nearbyHotels []string
+	for _, point := range s.points {
+		distance := haversineDistance(float64(req.Lat), float64(req.Lon), point.Plat, point.Plon)
+		if distance <= maxSearchRadius {
+			nearbyHotels = append(nearbyHotels, point.Pid)
+		}
 	}
 
-	return res, nil
+	return &geo.Result{HotelIds: nearbyHotels}, nil
 }
 
-func (s *Geo) getNearbyPoints(lat, lon float64) []geoindex.Point {
-	center := &geoindex.GeoPoint{
-		Pid:  "",
-		Plat: lat,
-		Plon: lon,
-	}
-
-	return s.geoIndex.KNearest(
-		center,
-		maxSearchResults,
-		geoindex.Km(maxSearchRadius),
-		func(p geoindex.Point) bool {
-			return true
-		},
-	)
-}
-
-// newGeoIndex returns a geo index with points loaded
-func newGeoIndex(path string) *geoindex.ClusteringIndex {
+func loadPoints(path string) []*point {
 	var (
 		file   = data.MustAsset(path)
 		points []*point
 	)
 
-	// load geo points from json file
 	if err := json.Unmarshal(file, &points); err != nil {
 		log.Fatalf("Failed to load hotels: %v", err)
 	}
 
-	// add points to index
-	index := geoindex.NewClusteringIndex()
-	for _, point := range points {
-		index.Add(point)
-	}
-
-	return index
+	return points
 }
